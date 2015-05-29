@@ -1,0 +1,217 @@
+
+
+Mon Aug 18 14:30:40 2014
+Command line: TestDisk
+
+TestDisk 6.14, Data Recovery Utility, July 2013
+Christophe GRENIER <grenier@cgsecurity.org>
+http://www.cgsecurity.org
+OS: Linux, kernel 3.13.0-32-generic (#57-Ubuntu SMP Tue Jul 15 03:51:08 UTC 2014) x86_64
+Compiler: GCC 4.8
+Compilation date: 2013-10-29T01:29:29
+ext2fs lib: 1.42.9, ntfs lib: libntfs-3g, reiserfs lib: none, ewf lib: none
+/dev/sda: LBA, HPA, LBA48, DCO support
+/dev/sda: size       1953525168 sectors
+/dev/sda: user_max   1953525168 sectors
+/dev/sda: native_max 1953525168 sectors
+/dev/sda: dco        1953525168 sectors
+/dev/sdb: LBA, HPA, LBA48, DCO support
+/dev/sdb: size       62533296 sectors
+/dev/sdb: user_max   62533296 sectors
+/dev/sdb: native_max 62533296 sectors
+/dev/sdb: dco        62533296 sectors
+Warning: can't get size for Disk /dev/mapper/control - 0 B - 1 sectors, sector size=512
+Hard disk list
+Disk /dev/sda - 1000 GB / 931 GiB - CHS 121601 255 63, sector size=512 - ST1000LM014-1EJ164, S/N:W3818KWV, FW:SM14
+Disk /dev/sdb - 32 GB / 29 GiB - CHS 3892 255 63, sector size=512 - SAMSUNG SSD PM830 mSATA 32GB, S/N:S0XLNECC512943, FW:CXM12D1Q
+
+Partition table type (auto): Intel
+Disk /dev/sda - 1000 GB / 931 GiB - ST1000LM014-1EJ164
+Partition table type: Intel
+
+Analyse Disk /dev/sda - 1000 GB / 931 GiB - CHS 121601 255 63
+Geometry from i386 MBR: head=255 sector=63
+NTFS at 15585/50/18
+Current partition structure:
+ 1 P Linux Swap               0  32 33   996   4 32   15998976
+ 2 * Linux                  996   4 33 15585  50 17  234375168
+ 3 P HPFS - NTFS          15585  50 18 121601  57 56 1703147520 [dados]
+
+search_part()
+Disk /dev/sda - 1000 GB / 931 GiB - CHS 121601 255 63
+     Linux Swap               0  32 33   996   4 16   15998960
+     SWAP2 version 1, pagesize=4096, 8191 MB / 7811 MiB
+
+recover_EXT2: s_block_group_nr=0/894, s_mnt_count=22/4294967295, s_blocks_per_group=32768, s_inodes_per_group=8192
+recover_EXT2: s_blocksize=4096
+recover_EXT2: s_blocks_count 29296896
+recover_EXT2: part_size 234375168
+     Linux                  996   4 33 15585  50 17  234375168
+     ext4 blocksize=4096 Large file Sparse superblock Recover, 120 GB / 111 GiB
+NTFS at 15585/50/18
+filesystem size           1703147520
+sectors_per_cluster       8
+mft_lcn                   4
+mftmirr_lcn               106446719
+clusters_per_mft_record   -10
+clusters_per_index_record 1
+     HPFS - NTFS          15585  50 18 121601  57 56 1703147520 [dados]
+     NTFS, blocksize=4096, 872 GB / 812 GiB
+
+Results
+   * Linux Swap               0  32 33   996   4 32   15998976
+     SWAP2 version 1, pagesize=4096, 8191 MB / 7812 MiB
+   P Linux                  996   4 33 15585  50 17  234375168
+     ext4 blocksize=4096 Large file Sparse superblock Recover, 120 GB / 111 GiB
+   P HPFS - NTFS          15585  50 18 121601  57 56 1703147520 [dados]
+     NTFS, blocksize=4096, 872 GB / 812 GiB
+
+interface_write()
+ 1 * Linux Swap               0  32 33   996   4 32   15998976
+ 2 P Linux                  996   4 33 15585  50 17  234375168
+ 3 P HPFS - NTFS          15585  50 18 121601  57 56 1703147520 [dados]
+
+search_part()
+Disk /dev/sda - 1000 GB / 931 GiB - CHS 121601 255 63
+     Linux Swap               0  32 33   996   4 16   15998960
+     SWAP2 version 1, pagesize=4096, 8191 MB / 7811 MiB
+
+recover_EXT2: s_block_group_nr=0/894, s_mnt_count=22/4294967295, s_blocks_per_group=32768, s_inodes_per_group=8192
+recover_EXT2: s_blocksize=4096
+recover_EXT2: s_blocks_count 29296896
+recover_EXT2: part_size 234375168
+     Linux                  996   4 33 15585  50 17  234375168
+     ext4 blocksize=4096 Large file Sparse superblock Recover, 120 GB / 111 GiB
+NTFS at 15585/50/18
+filesystem size           1703147520
+sectors_per_cluster       8
+mft_lcn                   4
+mftmirr_lcn               106446719
+clusters_per_mft_record   -10
+clusters_per_index_record 1
+     HPFS - NTFS          15585  50 18 121601  57 56 1703147520 [dados]
+     NTFS, blocksize=4096, 872 GB / 812 GiB
+Search for partition aborted
+
+Results
+   * Linux Swap               0  32 33   996   4 32   15998976
+     SWAP2 version 1, pagesize=4096, 8191 MB / 7812 MiB
+   P Linux                  996   4 33 15585  50 17  234375168
+     ext4 blocksize=4096 Large file Sparse superblock Recover, 120 GB / 111 GiB
+   P HPFS - NTFS          15585  50 18 121601  57 56 1703147520 [dados]
+     NTFS, blocksize=4096, 872 GB / 812 GiB
+
+interface_write()
+ 1 * Linux Swap               0  32 33   996   4 32   15998976
+ 2 P Linux                  996   4 33 15585  50 17  234375168
+ 3 P HPFS - NTFS          15585  50 18 121601  57 56 1703147520 [dados]
+write!
+
+write_mbr_i386: starting...
+write_all_log_i386: starting...
+No extended partition
+You will have to reboot for the change to take effect.
+Partition table type (auto): Intel
+Disk /dev/sda - 1000 GB / 931 GiB - ST1000LM014-1EJ164
+Partition table type: Intel
+
+Analyse Disk /dev/sda - 1000 GB / 931 GiB - CHS 121601 255 63
+Geometry from i386 MBR: head=255 sector=63
+NTFS at 15585/50/18
+Current partition structure:
+ 1 * Linux Swap               0  32 33   996   4 32   15998976
+ 2 P Linux                  996   4 33 15585  50 17  234375168
+ 3 P HPFS - NTFS          15585  50 18 121601  57 56 1703147520 [dados]
+
+search_part()
+Disk /dev/sda - 1000 GB / 931 GiB - CHS 121601 255 63
+     Linux Swap               0  32 33   996   4 16   15998960
+     SWAP2 version 1, pagesize=4096, 8191 MB / 7811 MiB
+
+recover_EXT2: s_block_group_nr=0/894, s_mnt_count=22/4294967295, s_blocks_per_group=32768, s_inodes_per_group=8192
+recover_EXT2: s_blocksize=4096
+recover_EXT2: s_blocks_count 29296896
+recover_EXT2: part_size 234375168
+     Linux                  996   4 33 15585  50 17  234375168
+     ext4 blocksize=4096 Large file Sparse superblock Recover, 120 GB / 111 GiB
+NTFS at 15585/50/18
+filesystem size           1703147520
+sectors_per_cluster       8
+mft_lcn                   4
+mftmirr_lcn               106446719
+clusters_per_mft_record   -10
+clusters_per_index_record 1
+     HPFS - NTFS          15585  50 18 121601  57 56 1703147520 [dados]
+     NTFS, blocksize=4096, 872 GB / 812 GiB
+
+Results
+   * Linux Swap               0  32 33   996   4 32   15998976
+     SWAP2 version 1, pagesize=4096, 8191 MB / 7812 MiB
+   P Linux                  996   4 33 15585  50 17  234375168
+     ext4 blocksize=4096 Large file Sparse superblock Recover, 120 GB / 111 GiB
+   P HPFS - NTFS          15585  50 18 121601  57 56 1703147520 [dados]
+     NTFS, blocksize=4096, 872 GB / 812 GiB
+
+interface_write()
+ 1 * Linux Swap               0  32 33   996   4 32   15998976
+ 2 P Linux                  996   4 33 15585  50 17  234375168
+ 3 P HPFS - NTFS          15585  50 18 121601  57 56 1703147520 [dados]
+write!
+
+write_mbr_i386: starting...
+write_all_log_i386: starting...
+No extended partition
+You will have to reboot for the change to take effect.
+Partition table type (auto): Intel
+Disk /dev/sda - 1000 GB / 931 GiB - ST1000LM014-1EJ164
+Partition table type: Intel
+
+Analyse Disk /dev/sda - 1000 GB / 931 GiB - CHS 121601 255 63
+Geometry from i386 MBR: head=255 sector=63
+NTFS at 15585/50/18
+Current partition structure:
+ 1 * Linux Swap               0  32 33   996   4 32   15998976
+ 2 P Linux                  996   4 33 15585  50 17  234375168
+ 3 P HPFS - NTFS          15585  50 18 121601  57 56 1703147520 [dados]
+
+search_part()
+Disk /dev/sda - 1000 GB / 931 GiB - CHS 121601 255 63
+     Linux Swap               0  32 33   996   4 16   15998960
+     SWAP2 version 1, pagesize=4096, 8191 MB / 7811 MiB
+
+recover_EXT2: s_block_group_nr=0/894, s_mnt_count=22/4294967295, s_blocks_per_group=32768, s_inodes_per_group=8192
+recover_EXT2: s_blocksize=4096
+recover_EXT2: s_blocks_count 29296896
+recover_EXT2: part_size 234375168
+     Linux                  996   4 33 15585  50 17  234375168
+     ext4 blocksize=4096 Large file Sparse superblock Recover, 120 GB / 111 GiB
+NTFS at 15585/50/18
+filesystem size           1703147520
+sectors_per_cluster       8
+mft_lcn                   4
+mftmirr_lcn               106446719
+clusters_per_mft_record   -10
+clusters_per_index_record 1
+     HPFS - NTFS          15585  50 18 121601  57 56 1703147520 [dados]
+     NTFS, blocksize=4096, 872 GB / 812 GiB
+
+Results
+   * Linux Swap               0  32 33   996   4 32   15998976
+     SWAP2 version 1, pagesize=4096, 8191 MB / 7812 MiB
+   P Linux                  996   4 33 15585  50 17  234375168
+     ext4 blocksize=4096 Large file Sparse superblock Recover, 120 GB / 111 GiB
+   P HPFS - NTFS          15585  50 18 121601  57 56 1703147520 [dados]
+     NTFS, blocksize=4096, 872 GB / 812 GiB
+
+interface_write()
+ 1 * Linux Swap               0  32 33   996   4 32   15998976
+ 2 P Linux                  996   4 33 15585  50 17  234375168
+ 3 P HPFS - NTFS          15585  50 18 121601  57 56 1703147520 [dados]
+write!
+
+write_mbr_i386: starting...
+write_all_log_i386: starting...
+No extended partition
+You will have to reboot for the change to take effect.
+
+TestDisk exited normally.

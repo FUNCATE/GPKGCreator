@@ -1,7 +1,11 @@
 package br.inpe.gpkg;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
+import java.security.InvalidParameterException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.geopkg.GeoPackage;
@@ -12,25 +16,59 @@ import org.geotools.referencing.crs.DefaultGeographicCRS;
 
 
 public class GPKGTilesCreator {
-	static GeoPackage gpkg;
-	public static void main(String[] args) throws Exception {
-		gpkg= new GeoPackage(new File("/dados/temp/prodes_tiles.db"));
-		gpkg.init();
-		GPKGTilesCreator.getTiles("/dados/temp/Prodes");
+	
+	private GeoPackage gpkg;
+	private String tilesDirectory;
+	private String tableName;
+	/**
+	 * Insert on a existing GeoPackage all the tiles of the requested directory.
+	 * @param gpkg Existing geopackage
+	 * @param tilesDirectory Directoriy with the tiles (x,y,z format)
+	 * @param tableName The name that the table will be when importing (directory name if null)
+	 * @throws IOException 
+	 * @throws Exception 
+	 */
+	public GPKGTilesCreator(GeoPackage gpkg, String tilesDirectory, String tableName)
+	{
+		this.gpkg=gpkg;
+		this.tilesDirectory=tilesDirectory;
+		this.tableName=tableName;
 		
+		if(this.gpkg==null)
+		{
+			throw new InvalidParameterException(GPKGTilesCreator.class.getName()+": Invalid geopackage file.");
+		}
+		
+		if(tilesDirectory==null
+				||tilesDirectory.isEmpty())
+		{
+			throw new InvalidParameterException(GPKGTilesCreator.class.getName()+": Invalid parameter tileDirectory: "+ tilesDirectory);
+		}
+		
+		if(!(new File(tilesDirectory).exists()))
+		{
+			throw new InvalidParameterException(GPKGTilesCreator.class.getName()+": Folder doesn't exists: "+ tilesDirectory);
+		}
+		
+		if(tableName==null
+				||tableName.isEmpty())
+		{
+			tableName = new File(tilesDirectory).getName();
+		}
 	}
-	
-	
-
-	 
-	 public static void getTiles(String folderPath) throws Exception
+		 
+	 private void getTiles(String folderPath, String tableName) throws IOException
 	 {
 		 File[] folders = new File(folderPath).listFiles();
 		 
 		TileEntry te = new TileEntry();
-		te.setTableName("prodes_tiles");
+		te.setTableName(tableName);
 		te.setBounds(new ReferencedEnvelope(-180,180,-90,90,DefaultGeographicCRS.WGS84));
- 
+		
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		
+		te.setLastChange(null);
 	    ArrayList<TileMatrix> matrixList =  getTilesMatrix(folders);
 	    
 	    for (TileMatrix tileMatrix : matrixList) {
@@ -42,7 +80,7 @@ public class GPKGTilesCreator {
 	    
 	 }
 	 
-	public static ArrayList<TileMatrix> getTilesMatrix(File[] levels) throws Exception {
+	private ArrayList<TileMatrix> getTilesMatrix(File[] levels) throws IOException {
 		ArrayList<TileMatrix> matrixList = new ArrayList<TileMatrix>();
 		for (File level : levels) {
 
@@ -52,7 +90,7 @@ public class GPKGTilesCreator {
 			try {
 				z = Integer.parseInt(level.getName());
 			} catch (NumberFormatException nfe) {
-				throw new Exception("Invalid folder named " + level.getName()
+				throw new NumberFormatException("Invalid folder named " + level.getName()
 						+ " on resolution levels");
 			}
 
@@ -76,7 +114,7 @@ public class GPKGTilesCreator {
 		return matrixList;
 
 	}
-	 public static void readZ(File[] zFolders, TileEntry te) throws Exception
+	 private void readZ(File[] zFolders, TileEntry te) throws IOException
 	 {
 		 for (File file : zFolders) {
 			if(file.isDirectory())
@@ -88,7 +126,7 @@ public class GPKGTilesCreator {
 				} 
 				catch(NumberFormatException nfe)  
 				{  
-					throw new Exception("Invalid folder named " + file.getName() + " on resolution levels");
+					throw new NumberFormatException("Invalid folder named " + file.getName() + " on resolution levels");
 				}  
 				
 		
@@ -97,7 +135,7 @@ public class GPKGTilesCreator {
 			}
 		}
 	 }
-	 public static void readX(File[] xFolders, TileEntry te, Integer z) throws Exception
+	 private void readX(File[] xFolders, TileEntry te, Integer z) throws IOException
 	 {
 		 for (File file : xFolders) {
 			if(file.isDirectory())
@@ -110,7 +148,7 @@ public class GPKGTilesCreator {
 				} 
 				catch(NumberFormatException nfe)  
 				{  
-					throw new Exception("Invalid folder named " + file.getName() + " on Z " + z + " folder.");
+					throw new NumberFormatException("Invalid folder named " + file.getName() + " on Z " + z + " folder.");
 				}  
 				File[] yFiles = file.listFiles();
 				
@@ -118,7 +156,7 @@ public class GPKGTilesCreator {
 			}
 		}
 	 }
-	 public static void readY(File[] yFiles, TileEntry te, Integer z, Integer x) throws Exception
+	 private void readY(File[] yFiles, TileEntry te, Integer z, Integer x) throws IOException
 	 {
 		 for (File file : yFiles) {
 			if(file.isFile()
@@ -131,7 +169,7 @@ public class GPKGTilesCreator {
 				} 
 				catch(NumberFormatException nfe)  
 				{  
-					throw new Exception("Invalid file named " + file.getName() + " on X " + x + " folder.");
+					throw new NumberFormatException("Invalid file named " + file.getName() + " on X " + x + " folder.");
 				}
 				byte[] bytes = Files.readAllBytes(file.toPath());
 				Tile tile = new Tile(z, x, y,bytes);
@@ -141,31 +179,9 @@ public class GPKGTilesCreator {
 			}
 		}
 	 }
-	 
-
-	 
-/*	 public static void testCreateTileEntry() throws Exception {
-         TileEntry e = new TileEntry();
-	     e.setTableName("foo");
-	     e.setBounds(new ReferencedEnvelope(-180,180,-90,90,DefaultGeographicCRS.WGS84));
-	     e.getTileMatricies().add(new TileMatrix(0, 1, 1, 256, 256, 0.1, 0.1));
-	     e.getTileMatricies().add(new TileMatrix(1, 2, 2, 256, 256, 0.1, 0.1));
-	
-	     gpkg.create(e);
-	
-	     List<Tile> tiles = new ArrayList();
-	     tiles.add(new Tile(0,0,0,new byte[]{0}));
-	     tiles.add(new Tile(1,0,0,new byte[]{1}));
-	     tiles.add(new Tile(1,0,1,new byte[]{2}));
-	     tiles.add(new Tile(1,1,0,new byte[]{3}));
-	     tiles.add(new Tile(1,1,1,new byte[]{4}));
-	
-	     for (Tile t : tiles) {
-	    	 gpkg.add(e, t);
-	     }
-	
-	     TileReader r = geopkg.reader(e, null, null, null, null, null, null);
-	     assertTiles(tiles, r);
-	 }*/
-	 
+	 public void run() throws IOException
+	 {
+			getTiles(tilesDirectory, tableName);		 
+	 }
+ 
 }

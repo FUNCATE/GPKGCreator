@@ -22,7 +22,7 @@ public class GPKGTilesPlotter {
 	static GeoPackage gpkg;
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		gpkg= new GeoPackage(new File("/dados/temp/prodes_tiles.db"));
+		gpkg= new GeoPackage(new File("/dados/projetos/BOEING/GPKG-RapidEye-Andradina/rapideye-andadina.gpkg"));
 		gpkg.init();
 		GPKGTilesPlotter.plotMosaic();
 	}
@@ -30,9 +30,9 @@ public class GPKGTilesPlotter {
 	public static void plotMosaic() throws IOException
 	{
 		TileEntry te = new TileEntry();
-		te.setTableName("prodes_tiles");
+		te.setTableName("rapideyeandadina");
 				
-		TileReader r = gpkg.reader(te, 10, 10, null, null, null, null);
+		TileReader r = gpkg.reader(te, 3, 3, null, null, null, null);
 
 		ArrayList<Tile> tiles = new ArrayList<Tile>();
 		
