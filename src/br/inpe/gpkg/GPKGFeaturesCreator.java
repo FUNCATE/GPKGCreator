@@ -90,7 +90,7 @@ public class GPKGFeaturesCreator {
         FeatureEntry entry = new FeatureEntry();
         entry.setLastChange(null);
         gpkg.add(entry, reprojectedSource);
-        
+        gpkg.createSpatialIndex(entry);
         return true;
         
 	}

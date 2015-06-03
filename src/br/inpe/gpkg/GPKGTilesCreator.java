@@ -53,7 +53,7 @@ public class GPKGTilesCreator {
 		if(tableName==null
 				||tableName.isEmpty())
 		{
-			tableName = new File(tilesDirectory).getName();
+			this.tableName = new File(tilesDirectory).getName();
 		}
 	}
 		 
@@ -75,7 +75,6 @@ public class GPKGTilesCreator {
 	    	te.getTileMatricies().add(tileMatrix);	
 		}
 		gpkg.create(te);
-		
 	    readZ(folders, te);
 	    
 	 }

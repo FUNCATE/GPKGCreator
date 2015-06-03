@@ -14,8 +14,18 @@ public class GPKGCreator {
 	/**
 	 * List of directories to get tiles (Each directory represents a tile table or layer)
 	 **/
-	private static final String[] TILES_DIR_PATH = {"/dados/projetos/BOEING/GPKG-RapidEye-Andradina/Mobac-out"};
+	private static final String[] TILES_DIR_PATH = {"/dados/projetos/BOEING/GPKG-RapidEye-Andradina/Mobac-out/BOEING_Andradina_RapidEye_Andradina",
+													 "/dados/projetos/BOEING/GPKG-Landsat-Andradina/Mobac-out/BOEING_Andradina_Landsat8_LC82220742014028LGN00",
+													 "/dados/projetos/BOEING/GPKG-Landsat-Andradina/Mobac-out/BOEING_Andradina_Landsat8_LC82220742014092LGN00",
+													 "/dados/projetos/BOEING/GPKG-Landsat-Andradina/Mobac-out/BOEING_Andradina_Landsat8_LC82220742014124LGN00",
+													 "/dados/projetos/BOEING/GPKG-Landsat-Andradina/Mobac-out/BOEING_Andradina_Landsat8_LC82220742014156LGN00",
+													 "/dados/projetos/BOEING/GPKG-Landsat-Andradina/Mobac-out/BOEING_Andradina_Landsat8_LC82220742014204LGN00",
+													 "/dados/projetos/BOEING/GPKG-Landsat-Andradina/Mobac-out/BOEING_Andradina_Landsat8_LC82220742014220LGN00",
+													 "/dados/projetos/BOEING/GPKG-Landsat-Andradina/Mobac-out/BOEING_Andradina_Landsat8_LC82220742014236LGN00",
+													 "/dados/projetos/BOEING/GPKG-Landsat-Andradina/Mobac-out/BOEING_Andradina_Landsat8_LC82220742014284LGN00"
+													 };
 
+	
 	/**
 	 * Directories to get features (For now, only shapefiles)
 	 **/
