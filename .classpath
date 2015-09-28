@@ -94,5 +94,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/org.w3.xlink"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/xmlcodegen"/>
 	<classpathentry kind="lib" path="/home/bogo/.m2/repository/com/vividsolutions/jts/1.13/jts-1.13.jar"/>
+	<classpathentry kind="lib" path="/home/bogo/.m2/repository/org/xerial/sqlite-jdbc/3.8.6/sqlite-jdbc-3.8.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
