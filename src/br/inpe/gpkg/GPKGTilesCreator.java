@@ -14,12 +14,25 @@ import org.geotools.geopkg.TileEntry;
 import org.geotools.geopkg.TileMatrix;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 
+import com.vividsolutions.jts.geom.Envelope;
+
 
 public class GPKGTilesCreator {
 	
 	private GeoPackage gpkg;
 	private String tilesDirectory;
 	private String tableName;
+	private Envelope tilesEnvelope=null;
+	/**
+	 * Level 0 XYZ/TMS LowerLeft and UpperRight coordinates. Used to get bbox
+	 */
+    private int maxZoomLevel = 0;
+	private int llx_xyz = 0;
+    private int lly_xyz = 0;
+    private int urx_xyz = 0;
+    private int ury_xyz = 0;
+    
+   private ArrayList<Tile> tiles = new ArrayList<Tile>();
 	/**
 	 * Insert on a existing GeoPackage all the tiles of the requested directory.
 	 * @param gpkg Existing geopackage
@@ -63,7 +76,7 @@ public class GPKGTilesCreator {
 		 
 		TileEntry te = new TileEntry();
 		te.setTableName(tableName);
-		te.setBounds(new ReferencedEnvelope(-180,180,-90,90,DefaultGeographicCRS.WGS84));
+		//te.setBounds(new ReferencedEnvelope(-180,180,-90,90,DefaultGeographicCRS.WGS84));
 		
 		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -71,13 +84,37 @@ public class GPKGTilesCreator {
 		te.setLastChange(null);
 	    ArrayList<TileMatrix> matrixList =  getTilesMatrix(folders);
 	    
+
+	    
 	    for (TileMatrix tileMatrix : matrixList) {
 	    	te.getTileMatricies().add(tileMatrix);	
+	    	if(tileMatrix.getZoomLevel()>maxZoomLevel)
+	    	{
+	    		maxZoomLevel = tileMatrix.getZoomLevel();
+	    	}
 		}
-		gpkg.create(te);
+		
 	    readZ(folders, te);
 	    
-	 }
+		System.out.println("llx: " + llx_xyz + " lly: " + lly_xyz + " urx: " + urx_xyz+ " ury: " + ury_xyz);
+		
+		double llx = tile2Long(llx_xyz, maxZoomLevel);
+		double lly = tile2Lat(lly_xyz, maxZoomLevel);
+		double urx = tile2Long(urx_xyz, maxZoomLevel);
+		double ury = tile2Lat(ury_xyz, maxZoomLevel);
+	    
+		System.out.println("llx: " + llx + " lly: " + lly + " urx: " + urx+ " ury: " + ury);
+		te.setBounds(new ReferencedEnvelope(llx,urx,lly,ury,DefaultGeographicCRS.WGS84));
+		
+	    gpkg.create(te);
+		
+		for (Tile tile : tiles) {
+			gpkg.add(te, tile);
+		}
+		
+		tilesEnvelope = new Envelope(llx,urx,lly,ury);
+	
+	}
 	 
 	private ArrayList<TileMatrix> getTilesMatrix(File[] levels) throws IOException {
 		ArrayList<TileMatrix> matrixList = new ArrayList<TileMatrix>();
@@ -172,8 +209,30 @@ public class GPKGTilesCreator {
 				}
 				byte[] bytes = Files.readAllBytes(file.toPath());
 				Tile tile = new Tile(z, x, y,bytes);
-		    	gpkg.add(te, tile);
+				tiles.add(tile);
 				
+
+		    	if(maxZoomLevel==z)
+		    	{
+		    		if(llx_xyz==0||x<llx_xyz)
+		    		{
+		    			llx_xyz = x;
+		    		}
+		    		if(lly_xyz==0||y>lly_xyz)
+		    		{
+		    			lly_xyz = y;
+		    		}
+		    		if(urx_xyz==0||x>urx_xyz)
+		    		{
+		    			urx_xyz = x;
+		    		}
+		    		if(ury_xyz==0||y<ury_xyz)
+		    		{
+		    			ury_xyz = y;
+		    		}
+		    	}
+		    	
+		    	
 				System.out.println("Z: " + z + " X: " + x + " Y: " + y);
 			}
 		}
@@ -182,5 +241,23 @@ public class GPKGTilesCreator {
 	 {
 			getTiles(tilesDirectory, tableName);		 
 	 }
+	 public double tile2Long(int x, int z)
+	 { 
+		 return (x/Math.pow(2,z)*360-180); 
+     }
+	 public double tile2Lat(int y, int z) {
+		 
+		 double n=Math.PI-2*Math.PI*y/Math.pow(2,z);
+		 
+		 return (180/Math.PI*Math.atan(0.5*(Math.exp(n)-Math.exp(-n)))); 
+	 }
+
+	public Envelope getTilesEnvelope() {
+		return tilesEnvelope;
+	}
+
+	public void setTilesEnvelope(Envelope tilesEnvelope) {
+		this.tilesEnvelope = tilesEnvelope;
+	}
  
 }

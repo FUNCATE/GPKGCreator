@@ -38,29 +38,31 @@ import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
+import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 
 public class GPKGFeaturesCreator {
 	
 	private GeoPackage gpkg =null;
-	private File[] featuresFiles=null;
+	private File featureFile=null;
+	private Envelope featuresEnvelope=null;
     static final Logger LOGGER = Logging.getLogger(GPKGFeaturesCreator.class);
 	/**
 	 * Insert on a existing GeoPackage all the geom features of the requested directory (ShapeFiles for now).
 	 * @param gpkg Existing GeoPackage
 	 * @param featuresDir Directories with one or more shapes
 	 */
-	public GPKGFeaturesCreator(GeoPackage gpkg, String featuresDir)
+	public GPKGFeaturesCreator(GeoPackage gpkg, File featuresFile)
 	{
-		LOGGER.log(Level.INFO, "Importing features directory: " + featuresDir);
+		LOGGER.log(Level.INFO, "Importing features from: " + featuresFile);
 		this.gpkg=gpkg;
-		featuresFiles=getFeaturesFilesOnFolder(featuresDir);
+		this.featureFile=featuresFile;
 		
-		if(featuresDir.isEmpty())
+	/*	if(featuresDir.isEmpty())
 		{
 			throw new InvalidParameterException(GPKGFeaturesCreator.class.getName()+": No features files found on: "+featuresDir);
-		}
+		}*/
 		
 	}
 	
@@ -181,40 +183,34 @@ public class GPKGFeaturesCreator {
         String sql = "CREATE INDEX " + sft.getName() + "_box_index ON " + sft.getName() + "(llx, lly, urx, ury)";
         GPKGRunSql.runSql(this.gpkg.getFile().getAbsolutePath(), sql);
         	
+        if(featuresEnvelope==null)
+        {
+        	featuresEnvelope = new Envelope(entry.getBounds().getMinX(), entry.getBounds().getMaxX(), entry.getBounds().getMinY(), entry.getBounds().getMaxY()); 
+        }
+        else
+        {
+        	featuresEnvelope.expandToInclude(new Envelope(entry.getBounds().getMinX(), entry.getBounds().getMaxX(), entry.getBounds().getMinY(), entry.getBounds().getMaxY()));
+        }
+        
         return true;
         
 	}
 	 
 	 public void run() throws IOException, ClassNotFoundException
 	 {
-		 for (File file : featuresFiles) {
-			 boolean sucess = importShapeFileToGPKG(file);	
-			 
-			 if(sucess)
-			 {
-				 LOGGER.log(Level.INFO, "Sucessfully imported: " + file.getName());	 
-			 }
-			 else
-			 {
-				 LOGGER.log(Level.INFO, "Failed while importing: " + file.getName());
-			 }
-			 
-		}
+	
+		 boolean sucess = importShapeFileToGPKG(featureFile);	
 		 
+		 if(sucess)
+		 {
+			 LOGGER.log(Level.INFO, "Sucessfully imported: " + featureFile.getName());	 
+		 }
+		 else
+		 {
+			 LOGGER.log(Level.INFO, "Failed while importing: " + featureFile.getName());
+		 }
 	 }
-	
-	private static File[] getFeaturesFilesOnFolder(String filesDir)
-	{
-		FilenameFilter filter = new FilenameFilter() {
-			@Override
-		    public boolean accept(File dir, String name) {
-		        return name.toLowerCase().endsWith(".shp");
-		    }
-		};
-		 File[] files = new File(filesDir).listFiles(filter);
-		 return files;
-	}
-	
+
 	private static CoordinateReferenceSystem getFileProjection(String prjFilePath)
 	{
 		File prjFile = new File(prjFilePath);
@@ -237,6 +233,14 @@ public class GPKGFeaturesCreator {
 		{
 			return null;
 		}
+	}
+
+	public Envelope getFeaturesEnvelope() {
+		return featuresEnvelope;
+	}
+
+	public void setFeaturesEnvelope(Envelope featuresEnvelope) {
+		this.featuresEnvelope = featuresEnvelope;
 	}
 
 }
